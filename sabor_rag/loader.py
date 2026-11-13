@@ -41,13 +41,26 @@ def _read_document(path: Path) -> str:
     )
 
 
-def _extract_producer_id(text: str, filename: str) -> str | None:
-    match = re.search(r"\bP\d{3}\b", filename, re.IGNORECASE)
+def _extract_producer_id(
+    text: str,
+    filename: str,
+) -> str | None:
+    pattern = r"(?<![A-Za-z0-9])P\d{3}(?!\d)"
+
+    match = re.search(
+        pattern,
+        filename,
+        re.IGNORECASE,
+    )
 
     if match:
         return match.group(0).upper()
 
-    match = re.search(r"\bP\d{3}\b", text, re.IGNORECASE)
+    match = re.search(
+        pattern,
+        text,
+        re.IGNORECASE,
+    )
 
     if match:
         return match.group(0).upper()
@@ -72,7 +85,10 @@ def _build_metadata(
         "category": category,
     }
 
-    producer_id = _extract_producer_id(text, path.name)
+    producer_id = _extract_producer_id(
+        text,
+        path.name,
+    )
 
     if producer_id:
         metadata["producer_id"] = producer_id
@@ -85,7 +101,10 @@ def _build_metadata(
     return metadata
 
 
-def load_document(path: Path, docs_dir: Path) -> SourceDocument:
+def load_document(
+    path: Path,
+    docs_dir: Path,
+) -> SourceDocument:
     raw_text = _read_document(path)
 
     category = path.parent.name
