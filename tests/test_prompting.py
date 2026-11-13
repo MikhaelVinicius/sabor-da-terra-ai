@@ -97,3 +97,21 @@ def test_prompt_does_not_treat_renewal_as_valid():
         "apresentada como válida"
         in prompt
     )
+
+def test_source_reference_regex_accepts_optional_spaces():
+    import re
+
+    examples = [
+        "[FONTE 1]",
+        "[FONTE1]",
+        "[FONTE   1]",
+    ]
+
+    for example in examples:
+        matches = re.findall(
+            r"\[FONTE\s*(\d+)\]",
+            example,
+            flags=re.IGNORECASE,
+        )
+
+        assert matches == ["1"]

@@ -35,7 +35,7 @@ def ask_rag(question: str) -> RAGAnswer:
     source_numbers = {
         int(number)
         for number in re.findall(
-            r"\[FONTE\s+(\d+)\]",
+            r"\[FONTE\s*(\d+)\]",
             answer_text,
             flags=re.IGNORECASE,
         )
