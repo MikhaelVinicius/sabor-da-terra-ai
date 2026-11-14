@@ -23,9 +23,9 @@ class RAGSettings:
         "gemini-embedding-001"
     )
     generation_model: str = os.getenv(
-        "RAG_GENERATION_MODEL",
-        "gemini-3.8-flash"
-    )
+    "RAG_GENERATION_MODEL",
+    "gemini-3.6-flash"
+)
     top_k: int = int(os.getenv("RAG_TOP_K", "5"))
     min_score: float = float(os.getenv("RAG_MIN_SCORE", "0.30"))
     redact_sensitive: bool = _as_bool(
