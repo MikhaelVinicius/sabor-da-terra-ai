@@ -1,6 +1,6 @@
 from sabor_rag.models import DocumentChunk, RetrievalHit
 from sabor_rag.prompting import build_context, build_prompt
-
+from sabor_rag.service import _extract_source_numbers
 
 def _create_test_hit() -> RetrievalHit:
     chunk = DocumentChunk(
@@ -115,3 +115,16 @@ def test_source_reference_regex_accepts_optional_spaces():
         )
 
         assert matches == ["1"]
+
+def test_extract_source_numbers_accepts_multiple_formats():
+    cases = {
+        "[FONTE 1]": {1},
+        "[FONTE1]": {1},
+        "[FONTE   1]": {1},
+        "[FONTE 1, FONTE 2]": {1, 2},
+        "[FONTE 2, FONTE 3, FONTE 5]": {2, 3, 5},
+        "Resposta baseada em [FONTE 1] e [FONTE 4]": {1, 4},
+    }
+
+    for text, expected in cases.items():
+        assert _extract_source_numbers(text) == expected

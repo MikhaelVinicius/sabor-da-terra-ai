@@ -5,6 +5,31 @@ from sabor_rag.models import Citation, RAGAnswer
 from sabor_rag.prompting import build_prompt
 from sabor_rag.retriever import retrieve
 
+def _extract_source_numbers(
+    answer_text: str,
+) -> set[int]:
+    source_numbers = set()
+
+    citation_groups = re.findall(
+        r"\[([^\]]*FONTE[^\]]*)\]",
+        answer_text,
+        flags=re.IGNORECASE,
+    )
+
+    for group in citation_groups:
+        numbers = re.findall(
+            r"FONTE\s*(\d+)",
+            group,
+            flags=re.IGNORECASE,
+        )
+
+        source_numbers.update(
+            int(number)
+            for number in numbers
+        )
+
+    return source_numbers
+
 
 def ask_rag(question: str) -> RAGAnswer:
     hits = retrieve(question)
@@ -32,14 +57,9 @@ def ask_rag(question: str) -> RAGAnswer:
             retrieval_hits=hits,
         )
 
-    source_numbers = {
-        int(number)
-        for number in re.findall(
-            r"\[FONTE\s*(\d+)\]",
-            answer_text,
-            flags=re.IGNORECASE,
-        )
-    }
+    source_numbers = _extract_source_numbers(
+    answer_text
+)
 
     citations = []
     seen_sources = set()
