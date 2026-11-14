@@ -10,6 +10,21 @@
       "A certificação está em processo de renovação.",
       "A renovação não torna a certificação atualmente válida."
     ],
+    "expected_terms": [
+      [
+        "vencida",
+        "expirada"
+      ],
+      [
+        "30/09/2026"
+      ],
+      [
+        "renovação"
+      ],
+      [
+        "não podem ser comercializados como orgânicos"
+      ]
+    ],
     "description": "Deve recuperar a certificação vencida de Josefa, que está em processo de renovação."
   },
   {
@@ -22,6 +37,20 @@
       "O contrato atende 45 escolas da rede municipal de Garanhuns.",
       "O objeto envolve aquisição de gêneros alimentícios da agricultura familiar para o PNAE."
     ],
+    "expected_terms": [
+      [
+        "045/2026-PNAE"
+      ],
+      [
+        "45 escolas"
+      ],
+      [
+        "agricultura familiar"
+      ],
+      [
+        "PNAE"
+      ]
+    ],
     "description": "Deve recuperar o contrato PNAE de Garanhuns referente ao fornecimento de alimentos para 45 escolas municipais."
   },
   {
@@ -32,6 +61,15 @@
     "expected_facts": [
       "A temperatura de armazenamento é de 2°C a 8°C.",
       "A validade é de 30 dias a partir da fabricação."
+    ],
+    "expected_terms": [
+      [
+        "2°C a 8°C",
+        "2 °C a 8 °C"
+      ],
+      [
+        "30 dias"
+      ]
     ],
     "description": "Deve recuperar a ficha técnica do queijo de coalho, que informa armazenamento entre 2°C e 8°C e validade de 30 dias."
   },
@@ -45,6 +83,21 @@
       "A lixeira da área de embalagem não possuía acionamento por pedal.",
       "A não conformidade foi classificada como menor."
     ],
+    "expected_terms": [
+      [
+        "área de embalagem"
+      ],
+      [
+        "lixeira"
+      ],
+      [
+        "sem acionamento por pedal",
+        "não possuía acionamento por pedal"
+      ],
+      [
+        "menor"
+      ]
+    ],
     "description": "Deve recuperar o laudo sanitário da queijaria de Cícero, que registra como não conformidade uma lixeira da área de embalagem sem acionamento por pedal."
   },
   {
@@ -56,6 +109,19 @@
       "O produtor identificado como P017 foi considerado irregular.",
       "A irregularidade envolvia comercialização de frango caipira.",
       "O produtor não possuía registro SIE para essa comercialização."
+    ],
+    "expected_terms": [
+      [
+        "P017"
+      ],
+      [
+        "frango caipira"
+      ],
+      [
+        "sem registro SIE",
+        "não possuía registro SIE",
+        "sem registro no Serviço de Inspeção"
+      ]
     ],
     "description": "Deve recuperar o relatório de inspeção da ADAGRO que identifica o produtor P017 como irregular por não possuir registro SIE para frango caipira."
   }

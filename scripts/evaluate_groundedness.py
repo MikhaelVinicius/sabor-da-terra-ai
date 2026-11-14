@@ -25,6 +25,24 @@ def load_golden_set() -> list[dict]:
         return json.load(file)
 
 
+def evaluate_expected_terms(
+    answer: str,
+    expected_terms: list[list[str]],
+) -> tuple[int, int]:
+    answer_normalized = answer.casefold()
+
+    matched = 0
+
+    for alternatives in expected_terms:
+        if any(
+            term.casefold() in answer_normalized
+            for term in alternatives
+        ):
+            matched += 1
+
+    return matched, len(expected_terms)
+
+
 def main():
     golden_set = load_golden_set()
 
@@ -32,6 +50,9 @@ def main():
     executed = 0
     infrastructure_failures = 0
     correct_source_count = 0
+
+    total_facts = 0
+    matched_facts = 0
 
     print("=" * 60)
     print("AVALIAÇÃO DE GROUNDEDNESS")
@@ -94,11 +115,44 @@ def main():
 
         if source_correct:
             correct_source_count += 1
+
             print()
             print("Fonte esperada citada: SIM")
         else:
             print()
             print("Fonte esperada citada: NÃO")
+
+        # Avaliação da cobertura factual
+        expected_terms = item.get(
+            "expected_terms",
+            [],
+        )
+
+        facts_matched, facts_total = (
+            evaluate_expected_terms(
+                result.answer,
+                expected_terms,
+            )
+        )
+
+        matched_facts += facts_matched
+        total_facts += facts_total
+
+        print()
+        print(
+            "Fatos esperados encontrados: "
+            f"{facts_matched}/{facts_total}"
+        )
+
+        if facts_total > 0:
+            factual_coverage = (
+                facts_matched / facts_total
+            )
+
+            print(
+                "Cobertura factual do caso: "
+                f"{factual_coverage:.2%}"
+            )
 
     print()
     print("=" * 60)
@@ -135,6 +189,26 @@ def main():
     else:
         print(
             "Taxa de citação correta: "
+            "não calculável"
+        )
+
+    if total_facts > 0:
+        overall_factual_coverage = (
+            matched_facts / total_facts
+        )
+
+        print(
+            "Fatos esperados encontrados: "
+            f"{matched_facts}/{total_facts}"
+        )
+
+        print(
+            "Cobertura factual geral: "
+            f"{overall_factual_coverage:.2%}"
+        )
+    else:
+        print(
+            "Cobertura factual geral: "
             "não calculável"
         )
 

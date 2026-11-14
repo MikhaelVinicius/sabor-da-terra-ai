@@ -128,3 +128,29 @@ def test_extract_source_numbers_accepts_multiple_formats():
 
     for text, expected in cases.items():
         assert _extract_source_numbers(text) == expected
+
+
+from scripts.evaluate_groundedness import evaluate_expected_terms
+
+
+def test_evaluate_expected_terms():
+    answer = (
+        "A certificação está expirada desde 30/09/2026 "
+        "e encontra-se em processo de renovação. "
+        "Os produtos não podem ser comercializados como orgânicos."
+    )
+
+    expected_terms = [
+        ["vencida", "expirada"],
+        ["30/09/2026"],
+        ["renovação"],
+        ["não podem ser comercializados como orgânicos"],
+    ]
+
+    matched, total = evaluate_expected_terms(
+        answer,
+        expected_terms,
+    )
+
+    assert matched == 4
+    assert total == 4
