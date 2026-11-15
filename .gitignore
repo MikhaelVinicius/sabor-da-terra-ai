@@ -1,0 +1,29 @@
+# Segredos e configurações locais
+.env
+.env.*
+!.env.example
+
+# Ambientes virtuais Python
+.venv/
+venv/
+env/
+
+# Cache e artefatos Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Logs e arquivos do sistema operacional
+*.log
+.DS_Store
+Thumbs.db
+
+# Contexto local da aplicação
+/source/
