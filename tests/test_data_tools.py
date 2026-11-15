@@ -143,6 +143,20 @@ class DataToolsTests(unittest.TestCase):
                 "P001", "2026-11-01", "2026-10-01", data_dir=self.data_dir
             )
 
+    def test_summary_rejects_blank_required_financial_amount(self):
+        with (self.data_dir / "financeiro.csv").open(
+            "a", encoding="utf-8", newline=""
+        ) as file:
+            writer = csv.writer(file)
+            writer.writerow(
+                ["FIN-7", "2026-10-15", "P001", "venda", "mel", "1", "", "pendente"]
+            )
+
+        with self.assertRaises(DataValidationError):
+            get_producer_summary(
+                "P001", "2026-10-01", "2026-10-31", data_dir=self.data_dir
+            )
+
     def test_price_lookup_matches_case_and_accent_normalized_product(self):
         result = lookup_price("  MARACUJA  ", data_dir=self.data_dir)
 
@@ -167,8 +181,14 @@ class DataToolsTests(unittest.TestCase):
         self.assertEqual(lot["producer_id"], "P003")
         self.assertEqual(lot["product"], "queijo coalho")
         self.assertEqual(lot["quantity_kg"], "45")
+        self.assertIsNone(lot["notes"])
         self.assertNotIn("producer_name", lot)
         self.assertNotIn("producer_cpf", lot)
+
+    def test_lot_lookup_returns_none_for_blank_optional_fields(self):
+        lot = lookup_lot("LOT-2026-0089", data_dir=self.data_dir)
+
+        self.assertIsNone(lot["notes"])
 
     def test_lot_lookup_returns_none_when_lot_does_not_exist(self):
         self.assertIsNone(lookup_lot("LOT-MISSING", data_dir=self.data_dir))
