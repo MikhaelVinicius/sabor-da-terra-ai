@@ -5,3 +5,6 @@ python-dotenv>=1.0.1
 numpy>=2.0.0
 pytest>=8.0.0
 pypdf>=5.0.0
+
+# Interface e deploy (Cloud/Fullstack/DevOps)
+streamlit>=1.67,<2
