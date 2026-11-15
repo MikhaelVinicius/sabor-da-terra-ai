@@ -166,6 +166,10 @@ class DataToolsTests(unittest.TestCase):
         self.assertEqual(result["matches"][0]["conventional_price"], "8.00")
         self.assertEqual(result["matches"][0]["unit"], "kg")
 
+    def test_price_lookup_rejects_blank_query(self):
+        with self.assertRaises(DataValidationError):
+            lookup_price("   ", data_dir=self.data_dir)
+
     def test_price_lookup_suggests_variants_without_selecting_one(self):
         result = lookup_price("goiaba paluma", data_dir=self.data_dir)
 
@@ -173,6 +177,21 @@ class DataToolsTests(unittest.TestCase):
         self.assertEqual(
             [item["product"] for item in result["suggestions"]],
             ["goiaba paluma especial", "goiaba paluma extra"],
+        )
+
+    def test_price_lookup_returns_exact_match_and_nearby_variants_separately(self):
+        with (self.data_dir / "tabela_precos_outubro_2026.csv").open(
+            "a", encoding="utf-8", newline=""
+        ) as file:
+            writer = csv.writer(file)
+            writer.writerow(["tomate", "kg", "5.00", "7.00", "5", "20", ""])
+            writer.writerow(["tomate cereja", "kg", "8.00", "10.00", "0", "0", ""])
+
+        result = lookup_price(" TOMATE ", data_dir=self.data_dir)
+
+        self.assertEqual([item["product"] for item in result["matches"]], ["tomate"])
+        self.assertEqual(
+            [item["product"] for item in result["suggestions"]], ["tomate cereja"]
         )
 
     def test_lot_lookup_is_case_insensitive_and_omits_personal_identifiers(self):

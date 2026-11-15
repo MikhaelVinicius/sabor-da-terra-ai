@@ -121,3 +121,10 @@ def test_format_lot_lookup_shows_only_present_fields():
 
 def test_format_lot_lookup_reports_missing_lot():
     assert format_lot_lookup(None) == "Lote não encontrado."
+
+
+def test_format_lot_lookup_omits_source_when_result_has_no_source():
+    formatted = format_lot_lookup({"lot_id": "LOT-1"})
+
+    assert formatted == "Lote LOT-1"
+    assert "Fonte:" not in formatted
