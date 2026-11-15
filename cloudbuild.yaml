@@ -1,0 +1,33 @@
+# CI/CD: conecte o repositório a um gatilho do Cloud Build (branch main) apontando para este arquivo.
+# Cada push: roda os testes de todos os módulos, gera a imagem e publica no Cloud Run.
+substitutions:
+  _REGION: southamerica-east1
+  _SERVICE: sabor-da-terra
+  _REPO: sabor-da-terra
+
+steps:
+  - id: testes
+    name: python:3.12-slim
+    entrypoint: bash
+    args: ["-c", "pip install -q -r requirements.txt && python -m pytest -q tests"]
+
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/app:$SHORT_SHA", "."]
+
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args: ["push", "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/app:$SHORT_SHA"]
+
+  - id: deploy
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args: ["run", "deploy", "${_SERVICE}",
+           "--image", "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/app:$SHORT_SHA",
+           "--region", "${_REGION}"]
+    # Demais configurações (segredo, afinidade, memória) ficam da 1ª publicação via deploy/deploy.sh.
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/app:$SHORT_SHA
+options:
+  logging: CLOUD_LOGGING_ONLY
