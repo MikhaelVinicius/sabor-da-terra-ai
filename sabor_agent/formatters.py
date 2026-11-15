@@ -15,9 +15,15 @@ _PAYMENT_LABELS = (
 def format_producer_summary(summary: Mapping[str, Any]) -> str:
     """Formata um resumo financeiro mantendo período, totais e fonte retornados."""
     producer_id = _present(summary.get("producer_id"))
-    title = "Resumo financeiro"
-    if producer_id:
-        title += f" do produtor {producer_id}"
+    producer_name = _present(summary.get("producer_name"))
+    if producer_name:
+        title = f"Resumo financeiro de {producer_name}"
+        if producer_id:
+            title += f" (produtor {producer_id})"
+    else:
+        title = "Resumo financeiro"
+        if producer_id:
+            title += f" do produtor {producer_id}"
     lines = [title]
 
     period = summary.get("period")

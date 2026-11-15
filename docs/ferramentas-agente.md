@@ -15,7 +15,7 @@ O despacho recebe uma chamada estruturada; ele não interpreta mensagens em ling
 
 | Nome | Argumentos obrigatórios | Uso |
 |---|---|---|
-| `get_producer_summary` | `producer_id`, `start_date`, `end_date` | Vendas e pagamentos do produtor no período inclusivo, com datas `AAAA-MM-DD`. |
+| `get_producer_summary` | `producer_id`, `start_date`, `end_date` | Vendas e pagamentos do produtor no período inclusivo, com datas `AAAA-MM-DD`; usa o nome cadastrado quando disponível e mantém o ID como referência. |
 | `lookup_price` | `product_query` | Preços da tabela de outubro de 2026. Retorna `matches` exatos e `suggestions` de variantes sem escolher uma. |
 | `lookup_lot` | `lot_id` | Campos disponíveis para o lote; retorna `None` quando não encontrado. |
 

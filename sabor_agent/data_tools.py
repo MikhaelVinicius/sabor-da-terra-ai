@@ -44,7 +44,9 @@ def get_producer_summary(
         raise DataValidationError("produtores.csv contém IDs duplicados.")
     if normalized_producer_id not in producer_ids:
         raise DataNotFoundError(f"Produtor {producer_id!s} não encontrado.")
-    canonical_producer_id = producers[producer_ids.index(normalized_producer_id)]["id"].strip()
+    producer = producers[producer_ids.index(normalized_producer_id)]
+    canonical_producer_id = producer["id"].strip()
+    producer_name = _optional_value(producer.get("nome_completo"))
 
     transactions = _read_csv(
         data_path / "financeiro.csv",
@@ -87,6 +89,7 @@ def get_producer_summary(
 
     return {
         "producer_id": canonical_producer_id,
+        "producer_name": producer_name,
         "period": {"start": start.isoformat(), "end": end.isoformat()},
         "transaction_count": transaction_count,
         "total_sales": _format_money(total_sales),

@@ -33,6 +33,17 @@ def test_format_producer_summary_shows_period_totals_and_payment_statuses():
     assert "R$" not in formatted
 
 
+def test_format_producer_summary_uses_name_and_keeps_producer_id():
+    formatted = format_producer_summary(
+        {
+            "producer_id": "P001",
+            "producer_name": "Produtor de Teste",
+        }
+    )
+
+    assert formatted == "Resumo financeiro de Produtor de Teste (produtor P001)"
+
+
 def test_format_price_lookup_displays_exact_matches_and_variants_without_applying_discount():
     result = {
         "query": "tomate",

@@ -122,6 +122,29 @@ class DataToolsTests(unittest.TestCase):
         self.assertEqual(summary["payments"]["unclassified"], {"amount": "2.50", "transactions": 1})
         self.assertNotIn("cpf", summary)
 
+    def test_summary_includes_producer_name_from_profile(self):
+        summary = get_producer_summary(
+            "P001", "2026-10-01", "2026-10-31", data_dir=self.data_dir
+        )
+
+        self.assertEqual(summary["producer_name"], "Produtor de Teste")
+
+    def test_summary_uses_no_producer_name_when_profile_name_is_blank(self):
+        self._write_csv(
+            "produtores.csv",
+            ["id", "nome_completo", "cpf", "status"],
+            [
+                ["P001", "   ", "11111111111", "ativo"],
+                ["P002", "Outra Pessoa", "22222222222", "ativo"],
+            ],
+        )
+
+        summary = get_producer_summary(
+            "P001", "2026-10-01", "2026-10-31", data_dir=self.data_dir
+        )
+
+        self.assertIsNone(summary["producer_name"])
+
     def test_summary_returns_zero_totals_when_period_has_no_sales(self):
         summary = get_producer_summary(
             "P001", "2026-12-01", "2026-12-31", data_dir=self.data_dir
